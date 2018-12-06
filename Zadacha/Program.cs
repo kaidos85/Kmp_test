@@ -31,10 +31,13 @@ namespace Zadacha
             {
                 var res = Dtosym.GetList(item.InputArray);
                 var abcList = GetResult(res);
-                var minAbc = abcList.OrderBy(c => c.KMPSum).FirstOrDefault();
-                item.KMP = minAbc.KMP;
-                item.KMPSum = minAbc.KMPSum;
-                item.Result = minAbc.Pattern;
+                var minAbc = abcList.OrderBy(c=>c.Pattern).ThenBy(c => c.KMPSum).FirstOrDefault();
+                if(minAbc != null)
+                {
+                    item.KMP = minAbc.KMP;
+                    item.KMPSum = minAbc.KMPSum;
+                    item.Result = minAbc.Pattern;
+                }
             }
         }
 
