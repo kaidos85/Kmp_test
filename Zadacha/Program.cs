@@ -10,7 +10,15 @@ namespace Zadacha
     {
         static void Main(string[] args)
         {
-            var init = Init();
+            List<Example> init = new List<Example>();
+            if(args.Length != 26)
+            {
+                init = Init();
+            }
+            else
+            {
+                init.Add(new Example(args));
+            }
             FindMin(init);
             Print(init);
             Console.ReadKey();
@@ -19,7 +27,7 @@ namespace Zadacha
         static List<Example> Init()
         {
             var list = new List<Example>();
-            list.Add(new Example { InputArray = new[] { 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } });
+            list.Add(new Example { InputArray = new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 2 } });
             list.Add(new Example { InputArray = new[] { 2, 2, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } });
             list.Add(new Example { InputArray = new[] { 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0 } });
             return list;
@@ -31,7 +39,7 @@ namespace Zadacha
             {
                 var res = Dtosym.GetList(item.InputArray);
                 var abcList = GetResult(res);
-                var minAbc = abcList.OrderBy(c=>c.Pattern).ThenBy(c => c.KMPSum).FirstOrDefault();
+                var minAbc = abcList.OrderBy(c => c.KMPSum).ThenBy(c=>c.Pattern).FirstOrDefault();
                 if(minAbc != null)
                 {
                     item.KMP = minAbc.KMP;
@@ -174,5 +182,31 @@ namespace Zadacha
         public string Result { get; set; }
         public int[] KMP { get; set; }
         public int KMPSum { get; set; }
+
+        public Example()
+        {
+
+        }
+
+        public Example(int[] inputArray)
+        {
+            InputArray = inputArray;
+        }
+
+        public Example(string[] inputStr)
+        {
+            var intArr = inputStr.Select(c => TryParseInt(c)).Where(c => c != null).Cast<int>();
+            if (inputStr.Length != 26 && intArr.Count() != 26)
+                throw new Exception("need 26");
+            InputArray = intArr.ToArray();
+        }
+
+        int? TryParseInt(string str)
+        {
+            int res = 0;
+            if (int.TryParse(str, out res))
+                return res;
+            return null;
+        }
     }
 }
